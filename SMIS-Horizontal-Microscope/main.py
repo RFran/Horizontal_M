@@ -181,7 +181,7 @@ class AdvancedparametersWindow(QtGui.QDialog, Advancedparameters_ui.Ui_Advanced_
         sgn = signe_int(motorNb)
         self.position.setText(str(sgn * int(positionvalue(motorNb))))
 
-    def mouvementplus(self):
+    def mouvementplus(self):                                   # Bouton plus dans la fenêtre AdvParam
         motorNb = self.comboBox.currentIndex() + 1
         sgn = signe_int(motorNb)
         value = sgn * int(self.step.text())
@@ -196,10 +196,10 @@ class AdvancedparametersWindow(QtGui.QDialog, Advancedparameters_ui.Ui_Advanced_
         sgn = signe_int(motorNb)
         value = sgn * -1 * int(self.step.text())
 
-        mouve(motorNb, value, 'RELAT')
-        while (execution(ser, '?VACT' + str(motorNb)) != '0'):
-            time.sleep(0.02)
-        self.position.setText(str(sgn * int(positionvalue(motorNb))))
+        #mouve(motorNb, value, 'RELAT')
+        #while (execution(ser, '?VACT' + str(motorNb)) != '0'):
+         #   time.sleep(0.02)
+        #self.position.setText(str(sgn * int(positionvalue(motorNb))))
 
 
     def saveparam(self):
@@ -493,7 +493,7 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
             global dacpos
             dacpos = 'Schwa'
 
-# Plus/minus X,Y,S movements relative to the current position
+**# Plus/minus X,Y,S movements relative to the current position #************************************************************
     def mouvementXh(self):
         xval = convert_str_int(self.stepX.text(), c)
         mouve(4, xval, 'RELAT')
@@ -517,15 +517,13 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
 
     def convert_unite(self):
         if self.btn_step.isChecked() and c == 20 and c_z == 40:
-            self.Position1X.setText(str(convert_str_int(self.Position1X.text(), 20)))
-            self.Position2X.setText(str(convert_str_int(self.Position2X.text(), 20)))
-            self.Position3X.setText(str(convert_str_int(self.Position3X.text(), 20)))
-            self.Position1Y.setText(str(convert_str_int(self.Position1Y.text(), 20)))
-            self.Position2Y.setText(str(convert_str_int(self.Position2Y.text(), 20)))
-            self.Position3Y.setText(str(convert_str_int(self.Position3Y.text(), 20)))
-            self.Position1Z.setText(str(convert_str_int(self.Position1Z.text(), 40)))
-            self.Position2Z.setText(str(convert_str_int(self.Position2Z.text(), 40)))
-            self.Position3Z.setText(str(convert_str_int(self.Position3Z.text(), 40)))
+            Lconvert = (1,2,3)
+           
+            for i in range(len(Lconvert)):
+                self.str('Position'+Lconvert[i]+'X').setText(str(convert_str_int(self.Position1X.text(), 20)))
+                self.str('Position'+Lconvert[i]+'Y').setText(str(convert_str_int(self.Position1X.text(), 20)))
+                self.str('Position'+Lconvert[i]+'X').setText(str(convert_str_int(self.Position1X.text(), 40)))
+                
             self.positionX.setText(str(convert_str_int(self.positionX.text(), 20)))
             self.positionY.setText(str(convert_str_int(self.positionY.text(), 20)))
             self.positionZ.setText(str(convert_str_int(self.positionZ.text(), 40)))
@@ -540,16 +538,14 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
             c_z = 1
             self.microstep.setText('Step')
             self.microstep.setStyleSheet("QLabel {color : red}")
-        if self.btn_micrometer.isChecked() and c == 1 and c_z == 1:
-            self.Position1X.setText(str(convert_str_int(self.Position1X.text(), 0.05)))
-            self.Position2X.setText(str(convert_str_int(self.Position2X.text(), 0.05)))
-            self.Position3X.setText(str(convert_str_int(self.Position3X.text(), 0.05)))
-            self.Position1Y.setText(str(convert_str_int(self.Position1Y.text(), 0.05)))
-            self.Position2Y.setText(str(convert_str_int(self.Position2Y.text(), 0.05)))
-            self.Position3Y.setText(str(convert_str_int(self.Position3Y.text(), 0.05)))
-            self.Position1Z.setText(str(convert_str_int(self.Position1Z.text(), 0.025)))
-            self.Position2Z.setText(str(convert_str_int(self.Position2Z.text(), 0.025)))
-            self.Position3Z.setText(str(convert_str_int(self.Position3Z.text(), 0.025)))
+        if self.btn_micrometer.isChecked() and c == 1 and c_z == 1:       
+           
+            for i in range(len(Lconvert)):
+                self.str('Position'+Lconvert[i]+'X').setText(str(convert_str_int(self.Position1X.text(), 20)))
+                self.str('Position'+Lconvert[i]+'Y').setText(str(convert_str_int(self.Position1X.text(), 20)))
+                self.str('Position'+Lconvert[i]+'X').setText(str(convert_str_int(self.Position1X.text(), 40)))
+                
+            
             self.positionX.setText(str(convert_str_int(self.positionX.text(), 0.05)))
             self.positionY.setText(str(convert_str_int(self.positionY.text(), 0.05)))
             self.positionZ.setText(str(convert_str_int(self.positionZ.text(), 0.025)))
