@@ -354,7 +354,7 @@ class Ui_Advanced_parameters_window(object):
         self.label_3.setGeometry(QtCore.QRect(780, 120, 47, 21))
         self.label_3.setObjectName(_fromUtf8("label_3"))
         self.btnplus = QtGui.QPushButton(Advanced_parameters_window)
-        self.btnplus.setGeometry(QtCore.QRect(730, 80, 41, 41))
+        self.btnplus.setGeometry(QtCore.QRect(730, 80, 41, 41))     # Abs,Ord,Largeur,Hauteur
         self.btnplus.setText(_fromUtf8(""))
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap(_fromUtf8("Logo/flecheplus.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
