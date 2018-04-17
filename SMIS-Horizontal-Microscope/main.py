@@ -196,10 +196,10 @@ class AdvancedparametersWindow(QtGui.QDialog, Advancedparameters_ui.Ui_Advanced_
         sgn = signe_int(motorNb)
         value = sgn * -1 * int(self.step.text())
 
-        #mouve(motorNb, value, 'RELAT')
-        #while (execution(ser, '?VACT' + str(motorNb)) != '0'):
-         #   time.sleep(0.02)
-        #self.position.setText(str(sgn * int(positionvalue(motorNb))))
+        mouve(motorNb, value, 'RELAT')
+        while (execution(ser, '?VACT' + str(motorNb)) != '0'):
+            time.sleep(0.02)
+        self.position.setText(str(sgn * int(positionvalue(motorNb))))
 
 
     def saveparam(self):
@@ -401,10 +401,11 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
         yval = convert_str_int(self.Position1Y.text(), c)
         zval = convert_str_int(self.Position1Z.text(), c_z)
 
-        Position = [xval, -int(yval), zval]
-        for i in range(3):
-            j = i + 4
-            mouve(j, Position[i], 'ABSOL')
+        #Position = [xval, -int(yval), zval]
+        #for i in range(3):
+        #    j = i + 4
+         #   mouve(j, Position[i], '
+            L')
 
     def GoP2(self):
         xval = convert_str_int(self.Position2X.text(), c)
@@ -493,7 +494,7 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
             global dacpos
             dacpos = 'Schwa'
 
-**# Plus/minus X,Y,S movements relative to the current position #************************************************************
+#**************************** Plus/minus X,Y,S movements relative to the current position ************************************************************
     def mouvementXh(self):
         xval = convert_str_int(self.stepX.text(), c)
         mouve(4, xval, 'RELAT')
@@ -516,7 +517,7 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
         mouve(6, -zval, 'RELAT')
 
     def convert_unite(self):
-        if self.btn_step.isChecked() and c==0.05 and c_z==0.025:        #Conversion µm->Step
+        if self.btn_step.isChecked() and c==20 and c_z==40:        #Conversion µm->Step
             c=20 
             c_z=40
             self.Position1X.setText(str(convert_str_int(self.Position1X.text(), c)))
@@ -537,11 +538,12 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
             self.stepX.setText(str(convert_str_int(self.stepX.text(), c)))
             self.stepY.setText(str(convert_str_int(self.stepY.text(), c)))
             self.stepZ.setText(str(convert_str_int(self.stepZ.text(), c_z)))
-            
+            c=1
+            c_z=1
             self.microstep.setText('Step')
             self.microstep.setStyleSheet("QLabel {color : red}")
             
-        if self.btn_micrometer.isChecked() and c == 20 and c_z == 40:         # Conversion Step->µm
+        if self.btn_micrometer.isChecked() and c == 1 and c_z == 1:         # Conversion Step->µm
             c=0.05 
             c_z=0.025    
             self.Position1X.setText(str(convert_str_int(self.Position1X.text(), c)))
@@ -561,8 +563,9 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
             self.SetpositionZ.setText(str(convert_str_int(self.SetpositionZ.text(), c_z)))
             self.stepX.setText(str(convert_str_int(self.stepX.text(), c)))
             self.stepY.setText(str(convert_str_int(self.stepY.text(), c)))
-            self.stepZ.setText(str(convert_str_int(self.stepZ.text(), c_z)))                           
-                      
+            self.stepZ.setText(str(convert_str_int(self.stepZ.text(), c_z)))
+            c=20
+            c_z=40                     
             self.microstep.setText('Micro')
             self.microstep.setStyleSheet("QLabel {color : red}")
 
@@ -582,7 +585,7 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
             global Speed
             Speed = 5
 
-   #def pressurecalcul(self):
+   #def pressurecalcul(self):                                  # Inutile après la fusion des deux programmes
         # temp = float(self.t_value.text())
     #    method = self.pressure_method.currentText()
      #   x = float(self.wl_value.text())
