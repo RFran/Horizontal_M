@@ -517,7 +517,8 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
 
     def convert_unite(self):
         if self.btn_step.isChecked() and c==0.05 and c_z==0.025:        #Conversion µm->Step
-            c=20 and c_z=40
+            c=20 
+            c_z=40
             self.Position1X.setText(str(convert_str_int(self.positionX.text(), c)))
             self.Position1Y.setText(str(convert_str_int(self.positionY.text(), c)))
             self.Position1Z.setText(str(convert_str_int(self.positionZ.text(), c_z)))          
@@ -541,7 +542,8 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
             self.microstep.setStyleSheet("QLabel {color : red}")
             
         if self.btn_micrometer.isChecked() and c == 20 and c_z == 40:         # Conversion Step->µm
-            c=0.05 and c_z=0.025    
+            c=0.05 
+            c_z=0.025    
             self.Position1X.setText(str(convert_str_int(self.positionX.text(), c)))
             self.Position1Y.setText(str(convert_str_int(self.positionY.text(), c)))
             self.Position1Z.setText(str(convert_str_int(self.positionZ.text(), c_z)))          
