@@ -2,7 +2,7 @@
 
 # Editeur: Matthias Glachant (glachant.matthias@gmail.com  )
 # Date: 7/6/2016
-
+#17/04/2018
 # --------------------------------------------------------------------
 
 import logging
@@ -110,7 +110,7 @@ def deceleration(motorNb, deceleration):       #On applique la décélération d
     return()
 
 def move(motorNB):
-    execution(ser, 'PGO' + str (motorNB)) #PGO > Start positioning for an axis
+    execution(ser, 'PGO' + str (motorNB)) #PGO -> Start positioning for an axis
     return()
 
 def stop(motorNb):                     # On arrête le moteur N
@@ -181,7 +181,7 @@ class AdvancedparametersWindow(QtGui.QDialog, Advancedparameters_ui.Ui_Advanced_
         sgn = signe_int(motorNb)
         self.position.setText(str(sgn * int(positionvalue(motorNb))))
 
-    def mouvementplus(self):
+    def mouvementplus(self):                                   # Bouton plus dans la fenêtre AdvParam
         motorNb = self.comboBox.currentIndex() + 1
         sgn = signe_int(motorNb)
         value = sgn * int(self.step.text())
@@ -196,10 +196,10 @@ class AdvancedparametersWindow(QtGui.QDialog, Advancedparameters_ui.Ui_Advanced_
         sgn = signe_int(motorNb)
         value = sgn * -1 * int(self.step.text())
 
-        mouve(motorNb, value, 'RELAT')
-        while (execution(ser, '?VACT' + str(motorNb)) != '0'):
-            time.sleep(0.02)
-        self.position.setText(str(sgn * int(positionvalue(motorNb))))
+        #mouve(motorNb, value, 'RELAT')
+        #while (execution(ser, '?VACT' + str(motorNb)) != '0'):
+         #   time.sleep(0.02)
+        #self.position.setText(str(sgn * int(positionvalue(motorNb))))
 
 
     def saveparam(self):
@@ -240,9 +240,9 @@ class AdvancedparametersWindow(QtGui.QDialog, Advancedparameters_ui.Ui_Advanced_
             execution(ser, 'SAVEAXPA' + str(i))
 
     def seeparam(self):
-        self.xyzAccAct.setText(execution(ser, '?ACC4'))
-        self.xyzDecAct.setText(execution(ser, '?DACC4'))
-        self.xyzSpeedAct.setText(execution(ser, '?VVEL4'))
+        self.xyzAccAct.setText(execution(ser, '?ACC4'))    # ?ACCn -> read out acceleration, axis 4,X
+        self.xyzDecAct.setText(execution(ser, '?DACC4'))     # ?DACC4 -> read out deceleration, axis 4, X
+        self.xyzSpeedAct.setText(execution(ser, '?VVEL4'))   # ?VVEL4 ->target speed for velocity mode 
         self.largeAccAct.setText(execution(ser, '?ACC1'))
         self.largeDecAct.setText(execution(ser, '?DACC1'))
         self.largeSpeedAct.setText(execution(ser, '?VVEL1'))
@@ -493,7 +493,7 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
             global dacpos
             dacpos = 'Schwa'
 
-# Plus/minus X,Y,S movements relative to the current position
+**# Plus/minus X,Y,S movements relative to the current position #************************************************************
     def mouvementXh(self):
         xval = convert_str_int(self.stepX.text(), c)
         mouve(4, xval, 'RELAT')
@@ -516,52 +516,53 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
         mouve(6, -zval, 'RELAT')
 
     def convert_unite(self):
-        if self.btn_step.isChecked() and c == 20 and c_z == 40:
-            self.Position1X.setText(str(convert_str_int(self.Position1X.text(), 20)))
-            self.Position2X.setText(str(convert_str_int(self.Position2X.text(), 20)))
-            self.Position3X.setText(str(convert_str_int(self.Position3X.text(), 20)))
-            self.Position1Y.setText(str(convert_str_int(self.Position1Y.text(), 20)))
-            self.Position2Y.setText(str(convert_str_int(self.Position2Y.text(), 20)))
-            self.Position3Y.setText(str(convert_str_int(self.Position3Y.text(), 20)))
-            self.Position1Z.setText(str(convert_str_int(self.Position1Z.text(), 40)))
-            self.Position2Z.setText(str(convert_str_int(self.Position2Z.text(), 40)))
-            self.Position3Z.setText(str(convert_str_int(self.Position3Z.text(), 40)))
-            self.positionX.setText(str(convert_str_int(self.positionX.text(), 20)))
-            self.positionY.setText(str(convert_str_int(self.positionY.text(), 20)))
-            self.positionZ.setText(str(convert_str_int(self.positionZ.text(), 40)))
-            self.SetpositionX.setText(str(convert_str_int(self.SetpositionX.text(), 20)))
-            self.SetpositionY.setText(str(convert_str_int(self.SetpositionY.text(), 20)))
-            self.SetpositionZ.setText(str(convert_str_int(self.SetpositionZ.text(), 40)))
-            self.stepX.setText(str(convert_str_int(self.stepX.text(), 20)))
-            self.stepY.setText(str(convert_str_int(self.stepY.text(), 20)))
-            self.stepZ.setText(str(convert_str_int(self.stepZ.text(), 40)))
-            global c, c_z
-            c = 1
-            c_z = 1
+        if self.btn_step.isChecked() and c==0.05 and c_z==0.025:        #Conversion µm->Step
+            c=20 
+            c_z=40
+            self.Position1X.setText(str(convert_str_int(self.Position1X.text(), c)))
+            self.Position1Y.setText(str(convert_str_int(self.Position1Y.text(), c)))
+            self.Position1Z.setText(str(convert_str_int(self.Position1Z.text(), c_z)))          
+            self.Position2X.setText(str(convert_str_int(self.Position2X.text(), c)))
+            self.Position2Y.setText(str(convert_str_int(self.Position2Y.text(), c)))
+            self.Position2Z.setText(str(convert_str_int(self.Position2Z.text(), c_z)))
+            self.Position3X.setText(str(convert_str_int(self.Position3X.text(), c)))
+            self.Position3Y.setText(str(convert_str_int(self.Position3Y.text(), c)))
+            self.Position3Z.setText(str(convert_str_int(self.Position3Z.text(), c_z)))
+            self.positionX.setText(str(convert_str_int(self.positionX.text(), c)))
+            self.positionY.setText(str(convert_str_int(self.positionY.text(), c)))
+            self.positionZ.setText(str(convert_str_int(self.positionZ.text(), c_z)))
+            self.SetpositionX.setText(str(convert_str_int(self.SetpositionX.text(), c)))
+            self.SetpositionY.setText(str(convert_str_int(self.SetpositionY.text(), c)))
+            self.SetpositionZ.setText(str(convert_str_int(self.SetpositionZ.text(), c_z)))
+            self.stepX.setText(str(convert_str_int(self.stepX.text(), c)))
+            self.stepY.setText(str(convert_str_int(self.stepY.text(), c)))
+            self.stepZ.setText(str(convert_str_int(self.stepZ.text(), c_z)))
+            
             self.microstep.setText('Step')
             self.microstep.setStyleSheet("QLabel {color : red}")
-        if self.btn_micrometer.isChecked() and c == 1 and c_z == 1:
-            self.Position1X.setText(str(convert_str_int(self.Position1X.text(), 0.05)))
-            self.Position2X.setText(str(convert_str_int(self.Position2X.text(), 0.05)))
-            self.Position3X.setText(str(convert_str_int(self.Position3X.text(), 0.05)))
-            self.Position1Y.setText(str(convert_str_int(self.Position1Y.text(), 0.05)))
-            self.Position2Y.setText(str(convert_str_int(self.Position2Y.text(), 0.05)))
-            self.Position3Y.setText(str(convert_str_int(self.Position3Y.text(), 0.05)))
-            self.Position1Z.setText(str(convert_str_int(self.Position1Z.text(), 0.025)))
-            self.Position2Z.setText(str(convert_str_int(self.Position2Z.text(), 0.025)))
-            self.Position3Z.setText(str(convert_str_int(self.Position3Z.text(), 0.025)))
-            self.positionX.setText(str(convert_str_int(self.positionX.text(), 0.05)))
-            self.positionY.setText(str(convert_str_int(self.positionY.text(), 0.05)))
-            self.positionZ.setText(str(convert_str_int(self.positionZ.text(), 0.025)))
-            self.SetpositionX.setText(str(convert_str_int(self.SetpositionX.text(), 0.05)))
-            self.SetpositionY.setText(str(convert_str_int(self.SetpositionY.text(), 0.05)))
-            self.SetpositionZ.setText(str(convert_str_int(self.SetpositionZ.text(), 0.025)))
-            self.stepX.setText(str(convert_str_int(self.stepX.text(), 0.05)))
-            self.stepY.setText(str(convert_str_int(self.stepY.text(), 0.05)))
-            self.stepZ.setText(str(convert_str_int(self.stepZ.text(), 0.025)))
-            global c, c_z
-            c = 20
-            c_z = 40
+            
+        if self.btn_micrometer.isChecked() and c == 20 and c_z == 40:         # Conversion Step->µm
+            c=0.05 
+            c_z=0.025    
+            self.Position1X.setText(str(convert_str_int(self.Position1X.text(), c)))
+            self.Position1Y.setText(str(convert_str_int(self.Position1Y.text(), c)))
+            self.Position1Z.setText(str(convert_str_int(self.Position1Z.text(), c_z)))          
+            self.Position2X.setText(str(convert_str_int(self.Position2X.text(), c)))
+            self.Position2Y.setText(str(convert_str_int(self.Position2Y.text(), c)))
+            self.Position2Z.setText(str(convert_str_int(self.Position2Z.text(), c_z)))
+            self.Position3X.setText(str(convert_str_int(self.Position3X.text(), c)))
+            self.Position3Y.setText(str(convert_str_int(self.Position3Y.text(), c)))
+            self.Position3Z.setText(str(convert_str_int(self.Position3Z.text(), c_z)))
+            self.positionX.setText(str(convert_str_int(self.positionX.text(), c)))
+            self.positionY.setText(str(convert_str_int(self.positionY.text(), c)))
+            self.positionZ.setText(str(convert_str_int(self.positionZ.text(), c_z)))
+            self.SetpositionX.setText(str(convert_str_int(self.SetpositionX.text(), c)))
+            self.SetpositionY.setText(str(convert_str_int(self.SetpositionY.text(), c)))
+            self.SetpositionZ.setText(str(convert_str_int(self.SetpositionZ.text(), c_z)))
+            self.stepX.setText(str(convert_str_int(self.stepX.text(), c)))
+            self.stepY.setText(str(convert_str_int(self.stepY.text(), c)))
+            self.stepZ.setText(str(convert_str_int(self.stepZ.text(), c_z)))                           
+                      
             self.microstep.setText('Micro')
             self.microstep.setStyleSheet("QLabel {color : red}")
 
@@ -581,18 +582,18 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
             global Speed
             Speed = 5
 
-    def pressurecalcul(self):
+   #def pressurecalcul(self):
         # temp = float(self.t_value.text())
-        method = self.pressure_method.currentText()
-        x = float(self.wl_value.text())
-        pressure = 0
-        if method == "Dewaele":
-            pressure = dewaele(x)
-        if method == "Mao hydro":
-            pressure = mao_hydro(x)
-        if method == "Mao no-hydro":
-            pressure = mao_no_hydro(x)
-        self.p_value.setText((str(round(pressure, 2))))
+    #    method = self.pressure_method.currentText()
+     #   x = float(self.wl_value.text())
+      #  pressure = 0
+       # if method == "Dewaele":
+        #    pressure = dewaele(x)
+        #if method == "Mao hydro":
+         #   pressure = mao_hydro(x)
+        #if method == "Mao no-hydro":
+         #   pressure = mao_no_hydro(x)
+       # self.p_value.setText((str(round(pressure, 2))))
 
     def color(self):
         if not (self.radioButton_4.isChecked()):
