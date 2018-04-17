@@ -541,9 +541,9 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
         if self.btn_micrometer.isChecked() and c == 1 and c_z == 1:       
            
             for i in range(len(Lconvert)):
-                self.str('Position'+Lconvert[i]+'X').setText(str(convert_str_int(self.Position1X.text(), 20)))
-                self.str('Position'+Lconvert[i]+'Y').setText(str(convert_str_int(self.Position1X.text(), 20)))
-                self.str('Position'+Lconvert[i]+'X').setText(str(convert_str_int(self.Position1X.text(), 40)))
+                self.str('Position'+Lconvert[i]+'X').setText(str(convert_str_int(self.Position1X.text(), 0.05)))
+                self.str('Position'+Lconvert[i]+'Y').setText(str(convert_str_int(self.Position1X.text(), 0.05)))
+                self.str('Position'+Lconvert[i]+'X').setText(str(convert_str_int(self.Position1X.text(), 0.025)))
                 
             
             self.positionX.setText(str(convert_str_int(self.positionX.text(), 0.05)))
