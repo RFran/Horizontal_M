@@ -401,11 +401,10 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
         yval = convert_str_int(self.Position1Y.text(), c)
         zval = convert_str_int(self.Position1Z.text(), c_z)
 
-        #Position = [xval, -int(yval), zval]
-        #for i in range(3):
-        #    j = i + 4
-         #   mouve(j, Position[i], '
-            L')
+        Position = [xval, -int(yval), zval]
+        for i in range(3):
+            j = i + 4
+            mouve(j, Position[i], 'L')
 
     def GoP2(self):
         xval = convert_str_int(self.Position2X.text(), c)
