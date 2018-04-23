@@ -9,6 +9,8 @@ import logging
 import sys  # We need sys so that we can pass argv to QApplication
 import time
 
+import seabreeze.spectrometers as sb    # on importe le module seabreeze Ocean Optics
+devices = sb.list_devices()            #On cherche un spectrometre
 import numpy as np
 import serial
 from PyQt4 import QtGui  # Import the PyQt4 module we'll need
@@ -736,7 +738,45 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
     def stopall(self):
         execution(ser, 'JACC5=1')
         self.statusAll()
+#-----------------------------------------Scan---------------------------------------------------
 
+spec = sb.Spectrometer(devices[0])      # On va utiliser le premier specromètre trouvé qui correspond au Hr4000
+int_time = convert_str_int(self.Position1X.text(), 1)
+
+
+spec.integration_time_micros(int_time)       # Temps d'intégration 100ms
+LOM = []
+LIM = []
+LY = []
+LZ = []
+
+def Scan(self):
+    z=-2
+    y=0
+
+    for w in range(0,130,10):
+        for u in range(0, 126, 2) and c==20 and c_z==40:
+            L = spec.wavelengths()  # Liste des Longeurs d'ondes
+            l = spec.intensities()  # Liste des Intensités
+            z += 2
+            mouve(5,z,'RELAT')
+            LIM.append(max(l))
+            LY.append(y)
+            LZ.append(z)
+        y += 5
+        for v in range(126,0,2) and c==20 and c_z==40 :
+            L = spec.wavelengths()  # Liste des Longeurs d'ondes
+            l = spec.intensities()  # Liste des Intensités
+            z -= 2
+            mouve(5, z, 'RELAT')
+            LIM.append(max(l))
+            LY.append(y)
+            LZ.append(z)
+        y += 5
+
+    print("Max Intensity",max(LIM))
+    print("Z Max :",LZ[np.array(l).argmax()])
+    print("Y Max :",LY[np.array(l).argmax()])
 
 # ------Open the windows-----
 def setup_old():
