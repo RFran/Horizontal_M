@@ -39,7 +39,7 @@ logger.addHandler(ch)
 logger.info('--- Starting Application ---')
 
 
-###----------DEF_FUNCTIONS--------------------------------------
+###**********************************DEF_FUNCTIONS*************************************
 
 def execution(ser, commande):
     logger.debug('Executing serial command: ' + commande)
@@ -72,12 +72,14 @@ def initialisation(motorNb): #Initilisation des moteurs
 def signe_str(motorNB):  # Le moteur 5 est monté à l'envers (str)
     if motorNB == 5:
         return '-'
-    return '+'
+    else:
+        return '+'
 
 def signe_int(motorNB):   # Le moteur 5 est monté à l'envers (entier)
     if motorNB == 5:
         return -1
-    return 1
+    else:
+        return 1
 
 def position(motorNb, position):                # On définit la position désiré pour le moteur N
     execution(ser, 'PSET' + str(motorNb) + '=' + str(position))  # Set target position respectively relative travel distance for an axis (Relat)
@@ -92,7 +94,8 @@ def positionvalue(motorNb):
     return x
 
 def convert_str_int(nb, n):       #On convertit une chaîne de caractère en entier
-    if nb == '': return ''
+    if nb == '': 
+        return ''
     nb = float(nb)
     nb = int(nb*n)
     return nb
@@ -109,21 +112,20 @@ def deceleration(motorNb, deceleration):       #On applique la décélération d
     execution(ser, 'DACC' + str(motorNb) + '=' + str(deceleration))
     return()
 
-def move(motorNB):
-    execution(ser, 'PGO' + str (motorNB)) #PGO -> Start positioning for an axis
-    return()
 
 def stop(motorNb):                     # On arrête le moteur N
     execution(ser, 'STOP' + str(motorNb))
     return()
 
-def mouve(motorNb, value, mode):
-    execution(ser, str(mode) + str(motorNb))
-    position(motorNb, value)
-    move(motorNb)       # Indique le moteur à utiliser
+def mouve(motorNb, value, mode):            # Commande complète pour déplacer le moteur
+    execution(ser, str(mode) + str(motorNb))   # On prépare la commande pour le moteur que l'on veut utiliser
+    position(motorNb, value)        # Commande pour déplacer le moteur
+    execution(ser, 'PGO' + str (motorNB))    # Start positioning for an axis
+    return()    
 
 
-# Ruby pressure scales and calculation-----------
+#******************************** Ruby pressure scales and calculation************************************
+
 x0 = 694.22
 
 def dewaele(x):
@@ -160,7 +162,7 @@ c = 1  # X,Y conversion parameter
 c_z = 1 # Z conversion parameter
 
 
-# ------------------------CLASSES------------------------------------------------------------
+# ****************************************CLASSES*************************************************************
 class AdvancedparametersWindow(QtGui.QDialog, Advancedparameters_ui.Ui_Advanced_parameters_window):
     def __init__(self, parent=None):
         # Explaining super is out of the scope of this article
@@ -191,7 +193,7 @@ class AdvancedparametersWindow(QtGui.QDialog, Advancedparameters_ui.Ui_Advanced_
             time.sleep(0.02)
         self.position.setText(str(sgn * int(positionvalue(motorNb))))
 
-    def mouvementmoins(self):
+    def mouvementmoins(self):                                   # Bouton moins dasn la fenêtre AdvParam
         motorNb = self.comboBox.currentIndex() + 1
         sgn = signe_int(motorNb)
         value = sgn * -1 * int(self.step.text())
@@ -248,7 +250,7 @@ class AdvancedparametersWindow(QtGui.QDialog, Advancedparameters_ui.Ui_Advanced_
         self.largeSpeedAct.setText(execution(ser, '?VVEL1'))
 
 # Ask for the current DAC position
-class DACpositionWindow(QtGui.QDialog, DACposition_ui.Ui_Form):
+class DACpositionWindow(QtGui.QDialog, DACposition_ui.Ui_Form):         # First window asking for DAC POSITION
     def __init__(self, parent=None):
         super(self.__class__, self).__init__(parent)
         self.setupUi(self)
@@ -265,7 +267,7 @@ class DACpositionWindow(QtGui.QDialog, DACposition_ui.Ui_Form):
         dacpos = 'Schwa'
 
 # Ask for the current microscope mode
-class MicromodeWindow(QtGui.QDialog, Micromode_ui.Ui_Microscopemode):
+class MicromodeWindow(QtGui.QDialog, Micromode_ui.Ui_Microscopemode):       #   Second window asking for microscope mode
     def __init__(self, parent=None):
         super(self.__class__, self).__init__(parent)
         self.setupUi(self)
@@ -281,7 +283,7 @@ class MicromodeWindow(QtGui.QDialog, Micromode_ui.Ui_Microscopemode):
         global mode
         mode = 'Raman'
 
-class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
+class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):            # Main and last window to appear
     def __init__(self):
         # Explaining super is out of the scope of this article
         # So please google it if you're not familar with it
@@ -695,8 +697,9 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
 
     def statemotor1(self):
         if self.radioButton_1.isChecked():
-            execution(ser, 'MON1')
-        else: execution(ser, 'MOFF1')
+            execution(ser, 'MON1')   # MONn -> Enable the motor power stage and activate position control feedback loop.
+        else: 
+            execution(ser, 'MOFF1') #MOFFn ->Disable the motor power stage and deactivate position control feedback loop.
         self.color()
 
     def statemotor2(self):
@@ -730,17 +733,17 @@ class MainHorizontalWindow(QtGui.QMainWindow, Horizontal_ui.Ui_MainWindow):
         self.color()
 
     def SetZero(self):
-        execution(ser, 'CRES4')
+        execution(ser, 'CRES4')    # CRESn -> Reset current position counter for an axis
         execution(ser, 'CRES5')
         execution(ser, 'CRES6')
         self.btnReadX.click()
 
     def stopall(self):
-        execution(ser, 'JACC5=1')
+        execution(ser, 'JACC5=1')     # JACCn -> Set maximum "jerk" for an axis, is used only with S-curve profile.
         self.statusAll()
 
 
-# ------Open the windows-----
+# ***************************************************Open the windows************************************************************
 def setup_old():
     logger.info('STEP: initial setup')
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
@@ -831,7 +834,7 @@ def discover_and_connect():
 
 def init_motors(ser):
     logger.info('STEP: init_motors')
-    relat = ('RELAT1', 'RELAT2', 'RELAT3', 'RELAT4', 'RELAT5', 'RELAT6')
+    relat = ('RELAT1', 'RELAT2', 'RELAT3', 'RELAT4', 'RELAT5', 'RELAT6')   # Set entry mode for an axis to "relative"
     mon = ('MON1', 'MON2', 'MON3', 'MON4', 'MON5', 'MON6')
     for i in range(6):
         execution(ser, relat[i])
